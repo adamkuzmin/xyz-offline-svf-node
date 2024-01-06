@@ -2,9 +2,9 @@
   "name": "viewer-walkthrough-online.viewer",
   "version": "2.0.0",
   "description": "Code sample for the Forge Viewer API",
-  "main": "index.js",
+  "main": "start.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node start.js"
   },
   "keywords": [
     "2-legged",
