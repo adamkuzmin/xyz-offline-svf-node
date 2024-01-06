@@ -51,7 +51,7 @@ app.post("/upload", upload.array("filesToUpload[]"), function (req, res) {
     let missingFiles = [];
 
     fileList.forEach((file) => {
-      let filePath = path.join(__dirname, "tmp", file);
+      let filePath = path.join(__dirname, file);
 
       // Check if each file exists in the tmp directory
       if (!fs.existsSync(filePath)) {
