@@ -10,6 +10,9 @@ var app = express();
 app.use(bodyParser.json());
 app.use(express.static(__dirname + "/www"));
 
+// Serve other static files from the '/tmp' folder
+app.use(express.static(__dirname + "/tmp"));
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "www", "viewer.html"));
 });
@@ -24,6 +27,30 @@ const policyKey = "transient";
 app.set("port", 3031);
 var server = app.listen(app.get("port"), function () {
   console.log("Server listening on port " + server.address().port);
+});
+
+// Setup Multer for file storage
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    // Save files in the 'tmp' folder
+    cb(null, path.join(__dirname, "tmp"));
+  },
+  filename: function (req, file, cb) {
+    // Use the original file name
+    cb(null, file.originalname);
+  },
+});
+
+var upload = multer({ storage: storage });
+
+// Upload endpoint
+app.post("/upload", upload.array("filesToUpload[]"), function (req, res) {
+  // Handle the uploaded files here
+  if (req.files && req.files.length > 0) {
+    res.send("Files uploaded successfully.");
+  } else {
+    res.status(400).send("No files were uploaded.");
+  }
 });
 
 app.get("/api/forge/oauth", function (req, res) {
@@ -184,7 +211,7 @@ app.post(
 );
 
 app.get("/api/folders", function (req, res) {
-  const directoryPath = path.join(__dirname, "www/svfs");
+  const directoryPath = path.join(__dirname, "tmp/");
 
   fs.readdir(directoryPath, function (err, entries) {
     if (err) {
@@ -235,7 +262,7 @@ app.get("/api/folders", function (req, res) {
 
 app.get("/api/folder-contents", function (req, res) {
   const folderName = req.query.folder;
-  const directoryPath = path.join(__dirname, "www/svfs", folderName);
+  const directoryPath = path.join(__dirname, "tmp", folderName);
 
   fs.readdir(directoryPath, function (err, files) {
     if (err) {
