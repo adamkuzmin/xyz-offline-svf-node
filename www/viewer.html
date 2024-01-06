@@ -73,7 +73,7 @@
         
         var folderName = getUrlParameter('folderName');
         var modelName = getUrlParameter('model');
-        var modelUrl = `http://localhost:3031/svfs/${folderName}/${modelName}`;
+        var modelUrl = `https://xyz-offline-svf-node.vercel.app/svfs/${folderName}/${modelName}`;
 
         console.log('modelUrl', modelUrl);
 
@@ -152,7 +152,7 @@
                 success: function(files) {
                     var svfFile = files.find(file => file.endsWith('.svf'));
                     if (svfFile) {
-                        var modelUrl = `http://localhost:3031/svfs/${folderName}/${svfFile}`;
+                        var modelUrl = `https://xyz-offline-svf-node.vercel.app/svfs/${folderName}/${svfFile}`;
                         if (viewer && viewer.model) {
                             viewer.finish();
                             viewer = new Autodesk.Viewing.GuiViewer3D(document.getElementById('MyViewerDiv'));
