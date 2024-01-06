@@ -21,7 +21,9 @@ var scopes = "data:read data:write data:create bucket:create bucket:read";
 const bucketKey = FORGE_CLIENT_ID.toLowerCase() + "_tutorial_bucket";
 const policyKey = "transient";
 
-app.set("port", 3031);
+const port = process.env.PORT || 3030;
+
+app.set("port", port);
 var server = app.listen(app.get("port"), function () {
   console.log("Server listening on port " + server.address().port);
 });
