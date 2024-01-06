@@ -45,9 +45,30 @@ var upload = multer({ storage: storage });
 
 // Upload endpoint
 app.post("/upload", upload.array("filesToUpload[]"), function (req, res) {
-  // Handle the uploaded files here
   if (req.files && req.files.length > 0) {
-    res.send("Files uploaded successfully.");
+    // Handle the uploaded files here
+    let fileList = req.files.map((file) => file.filename);
+    let missingFiles = [];
+
+    fileList.forEach((file) => {
+      let filePath = path.join(__dirname, "tmp", file);
+
+      // Check if each file exists in the tmp directory
+      if (!fs.existsSync(filePath)) {
+        missingFiles.push(file);
+      }
+    });
+
+    if (missingFiles.length > 0) {
+      res
+        .status(500)
+        .send(
+          "Some files were not uploaded successfully: " +
+            missingFiles.join(", ")
+        );
+    } else {
+      res.send("All files uploaded successfully.");
+    }
   } else {
     res.status(400).send("No files were uploaded.");
   }
